@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="IIS Web Application Name" description="" value="woozlesreversi" tags="IisApp">
+    <parameterEntry kind="ProviderPath" scope="IisApp" match="^C:\\Users\\gibbs\\Documents\\Visual\ Studio\ 2013\\Projects\\Reversi\\Reversi\\obj\\Release\\Package\\PackageTmp$" />
+    <parameterEntry kind="ProviderPath" scope="setAcl" match="^C:\\Users\\gibbs\\Documents\\Visual\ Studio\ 2013\\Projects\\Reversi\\Reversi\\obj\\Release\\Package\\PackageTmp$" />
+  </parameter>
+</parameters>

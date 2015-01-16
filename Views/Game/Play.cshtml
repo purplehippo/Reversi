@@ -1,0 +1,75 @@
+﻿@model Reversi.Models.BoardViewModel
+
+@using Reversi.Models;
+
+@{
+    //    ViewBag.Title = "Board";
+}
+
+@Html.AntiForgeryToken()
+<div class="container">
+    @{
+        var width = 0; var height = 0;
+        width = height = (Constants.COLS * 54);
+    }
+    <div>
+        <h2 id="lblWelcome">Welcome</h2>
+        <br />
+        <p id="lblBoardPlayers" class="form-control-static"></p>
+        <br />
+        <form class="form-inline" onsubmit="return false;">
+            <button id="btnFindOpponent" class="btn btn-primary">Join a game</button>
+            <label class="checkbox-inline" style="margin-left:30px;"><input id="chkValidMoves" type="checkbox" title="Show valid moves" checked="checked" />Show valid moves</label>
+        </form>
+        <div><label id="lblOpponentMessage"></label></div>
+    </div>
+
+    <div style="width:@(width)px;float:left;margin-right:20px;">
+        <div id="board" style="width:@(width)px;float:left;">
+            @{
+                foreach (TileViewModel t in Model.Tiles)
+                {
+                    <div class="tile tile@(t.State.ToString())" id="tile@(t.TileId)"><span>&nbsp;</span></div>
+                }
+            }
+            &nbsp;
+        </div>
+        <div id="toolbox" style="clear:left;width:@(width)px;">
+            <label id="lblBlackScore"></label>
+            <label id="lblWhiteScore"></label>
+            <div><p id="lblNextPlayer" class="form-control-static"></p></div>
+        </div>
+
+    </div>
+
+    <div style="width:250px;float:left;">
+        <div class="alert player">
+            <b>Your Messages</b>
+            <br />
+            <div id="playerMessages"></div>
+        </div>
+        <div class="alert game">
+            <b>Game Messages</b>
+            <br />
+            <div id="gameMessages"></div>
+        </div>
+    </div>
+
+    <div style="clear:both">
+        <form onsubmit="return false;">
+            <div class="form-inline alert messages">
+                <div id="userMessages"></div>
+                <input type="text" id="txtMessage" class="form-control">
+                <button id="btnSendMessage" class="btn btn-success">Send</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+@section scripts {
+    <script src="~/Scripts/jquery-ui-1.11.2.min.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.1.2.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script src="~/Scripts/ReversiScript.js"></script>
+}

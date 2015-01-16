@@ -1,0 +1,28 @@
+﻿
+@{
+}
+
+<div> 
+</div>
+
+@section scripts {
+    <script src="~/Scripts/jquery-ui-1.11.2.min.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.1.2.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+
+    <script>
+        $.connection.hub.start().done(function () {
+
+            $("div").click(function () {
+                if (!(this.id.lastIndexOf("tile", 0) === 0)) return;
+                // action the played tile, swap the colours via updateGrid(...)
+                rev.server.updateGameGrid($('#lblBoardId').text(), this.id.replace("tile", ""));
+                //rev.server.updateToolbox();
+            });
+            rev.server.updateToolbox($('#lblBoardId').text());
+        });
+
+
+    </script>
+    <script src="~/Scripts/ReversiScript.js"></script>
+}

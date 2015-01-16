@@ -1,0 +1,3 @@
+﻿Model: a data structure that represents the state of the board and the functions that handle the rules.  (Later this will probably be an object and its methods.)
+View: One view is probably a graphical display of the board.  Another might be a simple text representation used for debugging (and while the GUI is under development).
+Controller: One controller is probably the GUI elements that users interact with.  But an AI opponent would also be a controller, or a proxy object that represents a networked players.

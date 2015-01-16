@@ -1,0 +1,44 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html ng-app="reversiGame">
+<head>
+    <title>Reversi</title>
+    @Styles.Render("~/content/reversi")
+    <script src="~/Scripts/angular.min.js"></script>
+    <script src="~/Scripts/app/reversiController.js"></script>
+</head>
+<body>
+    <div ng-controller="reversiGameController">
+        <div class="col-md-2">
+            <section class="players">
+                <h3>Players</h3>
+                <ul class="list-unstyled">
+                    <li ng-class="{ me: true }"><span class="scoreWHITE">12</span>Jo</li>
+                    <li ng-class="{ me: false }"><span class="scoreBLACK">6</span>Rob</li>
+                    <li ng-repeat="user in game.Users" ng-class="{ disabled: user.Disconnected, me: user.Name == me.Name}">
+                        <span ng-class="{'score'+user.State}">{{ user.Score }}</span>{{ user.Name }}
+                    </li>
+                </ul>
+            </section>
+        </div>
+        <div class="col-md-10">
+            <section>
+                <h1>Play the game</h1>
+                {{test}}
+                <div id="gameGrid">
+                    <div ng-repeat="tile in tiles" ng-class="tile">
+                        here: {{ tile.id }}
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+</body>
+</html>
+
+ @*ng-model (2-way...)*@
+
