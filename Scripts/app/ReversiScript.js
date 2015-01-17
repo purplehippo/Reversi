@@ -70,7 +70,7 @@ $(function () {
         // name, state
         $('#lblOpponentMessage').html(data.name + ', you have connected to a game with ' + data.opponentName + '.  You are ' + data.state + '.');
         $('#btnFindOpponent').prop('disabled', true);
-        $('#playerData').css('display', 'block-inline');
+        $('#playerData').css('display', 'inline-block');
         $('#txtMessage').prop('placeholder', 'Send message to ' + data.opponentName);
     }
 
