@@ -22,13 +22,17 @@
 .players ul li {
   list-style: none;
 }*/
-.col-md-2 {
-    padding-bottom: 100%;
-    margin-bottom: -100%;
-    background-color:#333;
-}
 
-.players {
+.col-md-2 {
+    /*padding-bottom: 100%;
+    margin-bottom: -100%;*/
+    background-color:#999;
+}
+.gameMessages, .playerMessages, .chatMessages {
+    max-height: 200px;
+    overflow: auto;
+}
+/*.players {
     color: #fff;
 }
 .players ul li.me:after {
@@ -37,7 +41,7 @@
   font-size: smaller;
   color: #ff4e4e;
   margin-left: 10px;
-}
+}*/
 
 .scoreBLACK, .scoreWHITE {
     width: 60px;
