@@ -6,6 +6,8 @@
 var validMoves;
 var validMovesForMe;
 
+var players = {};
+
 $(function () {
     // connect to our broadcast hub
     var rev = $.connection.broadcastHub;
@@ -16,6 +18,7 @@ $(function () {
         $('#lblWhiteScore').html(white);
         $('#lblNextPlayer').html(message);
     }
+
     // update the game grid to 'flip' counters in changedTileIds list
     // replaces classes according to state
     rev.client.updateGrid = function (changedTileIds) {
@@ -28,6 +31,7 @@ $(function () {
             }
         }
     }
+
     // reset messages and re-add from list
     rev.client.updateGameMessages = function (messages, state) {
         // log, msg, state
@@ -45,31 +49,37 @@ $(function () {
             }
         }
         // animate the scroll to bottom if overflow
-        $('.game').animate({
-            scrollTop: $('.game').get(0).scrollHeight
+        $('.gameMessages').animate({
+            scrollTop: $('.gameMessages').get(0).scrollHeight
         }, 2000);
-        $('.player').animate({
-            scrollTop: $('.player').get(0).scrollHeight
+        $('.playerMessages').animate({
+            scrollTop: $('.playerMessages').get(0).scrollHeight
         }, 2000);
     }
+
     rev.client.updatePlayers = function (data) {
         // noGamesPlaying, noPlayers
         $('#lblBoardPlayers').html('Number of boards: ' + data.noGamesPlaying + '<br />Number of players: ' + data.noPlayers);
     }
+
     rev.client.noOpponents = function () {
         $('#lblOpponentMessage').html('Sorry, there are currently no opponents available to play.');
     }
+
     rev.client.foundOpponent = function (data) {
         // name, state
         $('#lblOpponentMessage').html(data.name + ', you have connected to a game with ' + data.opponentName + '.  You are ' + data.state + '.');
-        $('#btnFindOpponent').prop('disabled',  true);
+        $('#btnFindOpponent').prop('disabled', true);
+        $('#playerData').css('display', 'inline-block');
         $('#txtMessage').prop('placeholder', 'Send message to ' + data.opponentName);
     }
+
     rev.client.opponentDisconnected = function (data) {
         // name
         $('#lblOpponentMessage').html('Your opponent ' + data.name + ' disconnected.  YOU WIN!!');
         //RefreshGrid();
     }
+
     rev.client.showValidMoves = function (validTiles, forMe) {
         // save for when we switch on / off show
         if (validTiles.length > 0) {
@@ -83,45 +93,45 @@ $(function () {
         message = $('<p>').text(message).html();
         $('#userMessages').append('<b>' + time + ' ' + from + '</b>: ' + message + '<br />');
 
-        $('.messages').animate({
-            scrollTop: $('.messages').get(0).scrollHeight
+        $('.chatMessages').animate({
+            scrollTop: $('.chatMessages').get(0).scrollHeight
             }, 1000);
     }
     // ensure connection to hub; apply click events on tiles and find opponent;
     // get user and initialise data
-    $.connection.hub.start().done(function () {
-        var usr = prompt('Please enter your player name');
-        $('#lblWelcome').html('Welcome, ' + usr);
-        rev.server.newPlayer(usr);
-        rev.server.initialise();
+    $.connection.hub.start()
+        .done(function () {
+            var usr = prompt('Please enter your player name');
+            $('#lblWelcome').html('Welcome, ' + usr);
+            rev.server.newPlayer(usr);
+            rev.server.initialise();
 
-        // click event for DIVs with ids starting 'tile'
-        $("div").click(function () {
-            if (!(this.id.lastIndexOf("tile", 0) === 0)) return;
-            else {
-                ShowMoves(null, true, false);
-            }
-            // action the played tile, swap the colours via updateGrid(...)
-            rev.server.play(this.id.replace("tile", ""));
+            // click event for DIVs with ids starting 'tile'
+            $("div").click(function () {
+                if (!(this.id.lastIndexOf("tile", 0) === 0)) return;
+                else {
+                    ShowMoves(null, true, false);
+                }
+                // action the played tile, swap the colours via updateGrid(...)
+                rev.server.play(this.id.replace("tile", ""));
+            });
+            $('#btnFindOpponent').click(function () {
+                rev.server.findOpponent();
+            });
+            $('#chkValidMoves').click(function () {
+                if (this.checked) ShowMoves(validMoves, validMovesForMe, true);
+                else ShowMoves(null, validMovesForMe, false);
+            });
+            $('#btnSendMessage').click(function () {
+                rev.server.sendMessage(usr, $('#txtMessage').val());
+                $('#txtMessage').val('').focus();
+            });
+        }).fail(function () {
+            $('#playerMessages').append('<b>ERROR: CONNECTION LOST</b>');
+            $('.playerMessages').animate({
+                scrollTop: $('.playerMessages').get(0).scrollHeight
+            }, 2000);
         });
-        $('#btnFindOpponent').click(function () {
-            rev.server.findOpponent();
-        });
-        $('#chkValidMoves').click(function () {
-            if (this.checked) ShowMoves(validMoves, validMovesForMe, true);
-            else ShowMoves(null, validMovesForMe, false);
-        });
-        $('#btnSendMessage').click(function () {
-            rev.server.sendMessage(usr, $('#txtMessage').val());
-            $('#txtMessage').val('').focus();
-        });
-    });
-    $.connection.hub.start().fail(function () {
-        $('#playerMessages').append('<b>ERROR: CONNECTION LOST</b>');
-        $('.player').animate({
-            scrollTop: $('.player').get(0).scrollHeight
-        }, 2000);
-    });
 });
 
 function ShowMoves(tiles, forMe, display) {

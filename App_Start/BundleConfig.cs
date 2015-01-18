@@ -25,18 +25,16 @@ namespace Reversi
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                      "~/Content/app/Site.css",
+                      "~/Content/app/reversi.css"));
 
             // reversi bundles
             bundles.Add(new ScriptBundle("~/scripts/reversi").Include(
                         "~/Scripts/jquery-{version}.js",
                         "~/Scripts/jquery.signalR-{version}.js",
-                        "~/Scripts/angular.js",
+                        "~/Scripts/angular.min.js",
+                        "~/Scripts/angular-sanitize.min.js",
                         "~/Scripts/app/reversiController.js"));
-
-            bundles.Add(new StyleBundle("~/content/reversi").Include(
-                        "~/Content/bootstrap.css",
-                        "~/Content/reversi.css"));
         }
     }
 }

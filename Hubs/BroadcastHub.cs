@@ -178,9 +178,7 @@ namespace Reversi.Hubs
             GameModel board = CurrentBoard();
             if (board == null)
             {
-                MessageLog log = new MessageLog();
-                log.Add(MessageLogEnum.PLAYER, "You are not connected to a game. Please join a game.<br />", TileStateEnum.EMPTY);
-                Clients.Client(Context.ConnectionId).UpdateGameMessages(log.Logs, TileStateEnum.EMPTY);
+                NotConnected();
                 return;
             }
 
@@ -211,19 +209,17 @@ namespace Reversi.Hubs
         }
 
         /// <summary>
-        /// Send a user message to the board's players
+        /// Send a chat message to the board's players
         /// </summary>
         /// <param name="from"></param>
         /// <param name="message"></param>
-        public void SendMessage(string from, string message)
+        public void SendChatMessage(string from, string message)
         {
             // check we are connected to a valid board
             GameModel board = CurrentBoard();
             if (board == null)
             {
-                MessageLog log = new MessageLog();
-                log.Add(MessageLogEnum.PLAYER, "You are not connected to a game. Please join a game.<br />", TileStateEnum.EMPTY);
-                Clients.Client(Context.ConnectionId).UpdateGameMessages(log.Logs, TileStateEnum.EMPTY);
+                NotConnected();
                 return;
             }
             string time = DateTime.Now.ToString("HH:mm:ss");
@@ -249,6 +245,19 @@ namespace Reversi.Hubs
 
             return board.Player1.ConnectionId == Context.ConnectionId ? board.Player1 : board.Player2;
         }
+
+        /// <summary>
+        /// Add a not connected message to the Log, and broadcast to requesting client
+        /// Note: Log no longer used since port to Angular (still tidying up).  Now stored $scope.message
+        /// </summary>
+        private void NotConnected()
+        {
+            MessageLog log = new MessageLog();
+            log.Add(MessageLogEnum.PLAYER, "You are not connected to a game. Please join a game.", TileStateEnum.EMPTY);
+//            Clients.Client(Context.ConnectionId).UpdateGameMessages(log.Logs, TileStateEnum.EMPTY);
+            Clients.Client(Context.ConnectionId).UpdatePlayerMessages("You are not connected to a game. Please join a game.", TileStateEnum.EMPTY);
+        }
+
     }
 
 }

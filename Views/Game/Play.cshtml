@@ -1,104 +1,85 @@
-﻿@model Reversi.Models.BoardViewModel
-
-@using Reversi.Models;
-
-@{
-    //    ViewBag.Title = "Board";
-    var width = 0; var height = 0;
-    width = height = (Constants.COLS * 54);
+﻿@{
+//    Layout = null;
+//    ViewBag.Title = "Board";
 }
 @Html.AntiForgeryToken()
 
-<div class="container-fluid">
+<div class="container-fluid" ng-controller="gameController">
     <div class="row">
         <div class="col-md-3">
             <section class="players">
                 <h3>Players</h3>
-                <button id="btnFindOpponent" class="btn btn-primary">Join a game</button>
-                <p id="lblOpponentMessage"></p>
-                <div id="playerData" style="display:none;">
+                <button ng-click="joinGame()" class="btn btn-primary">Join a game</button>
+                <p>{{ messages.opponent }}</p>
+                <div ng-show="panels.playerData">
                     <div id="toolbox">
-                        <p id="lblBlackScore"></p>
-                        <p id="lblWhiteScore"></p>
-                        <div><p id="lblNextPlayer" class="form-control-static"></p></div>
+                        <p ng-model="blackScore" class="scoreBLACK"></p>
+                        <p ng-model="whiteScore" class="scoreWHITE"></p>
+                        <p ng-model="nextPlayer"></p>
                     </div>
-                    @*<ul class="list-unstyled">
-                        <li ng-class="{ me: true }"><span class="scoreWHITE">12</span>Jo</li>
-                        <li ng-class="{ me: false }"><span class="scoreBLACK">6</span>Rob</li>
-                        <li ng-repeat="user in game.Users" ng-class="{ disabled: user.Disconnected, me: user.Name == me.Name}">
-                            <span ng-class="{'score'+user.State}">{{ user.Score }}</span>{{ user.Name }}
-                        </li>
-                    </ul>*@
-
                     <div class="checkbox"><label><input id="chkValidMoves" type="checkbox" title="Show valid moves" checked="checked" />Show valid moves</label></div>
                 </div>
-                <p id="lblBoardPlayers" class="form-control-static"></p>
+                <p ng-bind-html="messages.board"></p>
             </section>
         </div>
 
         <div class="col-md-6">
             <section class="center-block">
-                <div style="width:@(width)px;">
-                    <h2 id="lblWelcome">Welcome</h2>
-                    <div id="board">
-                    @{
-                        foreach (TileViewModel t in Model.Tiles)
-                        {
-                            <div class="tile tile@(t.State.ToString())" id="tile@(t.TileId)"><span>&nbsp;</span></div>
-                        }
-                    }
-                    &nbsp;
+                <h2 ng-model="messages.welcome">Welcome</h2>
+                <div class="board" style="width:{{boardWidth}}px;">
+                    <div ng-repeat="tile in tiles" ng-click="tileSelected(tile)" id="{{ tile.ref }}" class="tile tile{{ tile.state }}">
+                        &nbsp;
                     </div>
-
+                    &nbsp;
                 </div>
-
-                @*<h1>Play the game</h1>
-                    {{test}}
-                    <div id="gameGrid">
-                        <div ng-repeat="tile in tiles" ng-class="tile">
-                            here: {{ tile.id }}
-                        </div>
-                    </div>*@
             </section>
         </div>
+
         <div class="col-md-3">
             <section>
                 <h3>Messages</h3>
                 <div class="panel panel-warning">
                     <div class="panel-heading">Your Messages</div>
-                    <div class="panel-body"><div id="playerMessages" class="playerMessages"></div></div>
+                    <div class="panel-body playerMessages">
+                        <p ng-repeat="msg in messages.player track by $index">{{ msg }}</p>
+                    </div>
                 </div>
                 <div class="panel panel-info">
                     <div class="panel-heading">Game Messages</div>
-                    <div class="panel-body"><div id="gameMessages" class="gameMessages"></div></div>
+                    <div class="panel-body gameMessages">
+                        <p ng-repeat="msg in messages.game track by $index">{{ msg }}</p>
+                    </div>
                 </div>
             </section>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <div style="clear:both" class="panel panel-success">
-            <div class="panel-heading">Chat Messages</div>
-            <div class="panel-body">
-                <div class="chatMessages">
-                    <form onsubmit="return false;">
-                        <div class="form-inline" id="chatMessages">
-                            <div id="userMessages"></div>
-                            <input type="text" id="txtMessage" class="form-control">
-                            <button id="btnSendMessage" class="btn btn-success">Send</button>
-                        </div>
-                    </form>
+    <div class="row">
+        <div class="col-md-12">
+            <section>
+                <div style="clear:both" class="panel panel-success">
+                    <div class="panel-heading">Chat Messages</div>
+                    <div class="panel-body chatMessages">
+                        <form onsubmit="return false;">
+                            <div class="form-inline">
+                                <p ng-repeat="msg in messages.chat track by $index" ng-bind-html="msg"></p>
+                                <input type="text" ng-model="chatMessage" class="form-control" placeholder="{{ chatTextPlaceholder || 'Send message' }}">
+                                <button ng-click="sendChatMessage()" class="btn btn-success">Send</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
+            </section>
         </div>
     </div>
 </div>
 
   
 @section scripts {
-    <script src="~/Scripts/jquery-ui-1.11.2.min.js"></script>
-    <script src="~/Scripts/jquery.signalR-2.1.2.min.js"></script>
-    <script src="~/signalr/hubs"></script>
-    <script src="~/Scripts/app/ReversiScript.js"></script>
+<script src="~/Scripts/jquery-ui-1.11.2.min.js"></script>
+<script src="~/Scripts/jquery.signalR-2.1.2.min.js"></script>
+<script src="~/signalr/hubs"></script>
+<script src="~/Scripts/angular.min.js"></script>
+<script src="~/Scripts/angular-sanitize.min.js"></script>
+@*<script src="~/Scripts/app/ReversiScript.js"></script>*@
+<script src="~/Scripts/app/reversiController.js"></script>
 }

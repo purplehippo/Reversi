@@ -33,7 +33,7 @@ $(function () {
     }
 
     // reset messages and re-add from list
-    rev.client.updateGameMessages = function (messages, state) {
+    rev.client.updatePlayerMessages = function (messages, state) {
         // log, msg, state
         $('#gameMessages').html('');
         $('#playerMessages').html('');
@@ -123,7 +123,7 @@ $(function () {
                 else ShowMoves(null, validMovesForMe, false);
             });
             $('#btnSendMessage').click(function () {
-                rev.server.sendMessage(usr, $('#txtMessage').val());
+                rev.server.sendChatMessage(usr, $('#txtMessage').val());
                 $('#txtMessage').val('').focus();
             });
         }).fail(function () {

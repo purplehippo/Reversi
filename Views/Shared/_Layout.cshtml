@@ -2,13 +2,12 @@
     Displays othello grid plus all player and game messages
 -->
 <!DOCTYPE html>
-<html>
+<html ng-app="reversiGame">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
-    @Styles.Render("~/Content/reversi")
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
@@ -35,7 +34,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year - Jo's SignalR Othello</p>
         </footer>
     </div>
 

@@ -4,72 +4,101 @@
 
 @{
     //    ViewBag.Title = "Board";
+    var width = 0; var height = 0;
+    width = height = (Constants.COLS * 54);
 }
-
 @Html.AntiForgeryToken()
-<div class="container">
-    @{
-        var width = 0; var height = 0;
-        width = height = (Constants.COLS * 54);
-    }
-    <div>
-        <h2 id="lblWelcome">Welcome</h2>
-        <br />
-        <p id="lblBoardPlayers" class="form-control-static"></p>
-        <br />
-        <form class="form-inline" onsubmit="return false;">
-            <button id="btnFindOpponent" class="btn btn-primary">Join a game</button>
-            <label class="checkbox-inline" style="margin-left:30px;"><input id="chkValidMoves" type="checkbox" title="Show valid moves" checked="checked" />Show valid moves</label>
-        </form>
-        <div><label id="lblOpponentMessage"></label></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+            <section class="players">
+                <h3>Players</h3>
+                <button id="btnFindOpponent" class="btn btn-primary">Join a game</button>
+                <p id="lblOpponentMessage"></p>
+                <div id="playerData" style="display:none;">
+                    <div id="toolbox">
+                        <p id="lblBlackScore"></p>
+                        <p id="lblWhiteScore"></p>
+                        <div><p id="lblNextPlayer" class="form-control-static"></p></div>
+                    </div>
+                    @*<ul class="list-unstyled">
+                        <li ng-class="{ me: true }"><span class="scoreWHITE">12</span>Jo</li>
+                        <li ng-class="{ me: false }"><span class="scoreBLACK">6</span>Rob</li>
+                        <li ng-repeat="user in game.Users" ng-class="{ disabled: user.Disconnected, me: user.Name == me.Name}">
+                            <span ng-class="{'score'+user.State}">{{ user.Score }}</span>{{ user.Name }}
+                        </li>
+                    </ul>*@
+
+                    <div class="checkbox"><label><input id="chkValidMoves" type="checkbox" title="Show valid moves" checked="checked" />Show valid moves</label></div>
+                </div>
+                <p id="lblBoardPlayers" class="form-control-static"></p>
+            </section>
+        </div>
+
+        <div class="col-md-6">
+            <section class="center-block">
+                <div style="width:@(width)px;">
+                    <h2 id="lblWelcome">Welcome</h2>
+                    <div id="board">
+                    @{
+                        foreach (TileViewModel t in Model.Tiles)
+                        {
+                            <div class="tile tile@(t.State.ToString())" id="tile@(t.TileId)"><span>&nbsp;</span></div>
+                        }
+                    }
+                    &nbsp;
+                    </div>
+
+                </div>
+
+                @*<h1>Play the game</h1>
+                    {{test}}
+                    <div id="gameGrid">
+                        <div ng-repeat="tile in tiles" ng-class="tile">
+                            here: {{ tile.id }}
+                        </div>
+                    </div>*@
+            </section>
+        </div>
+        <div class="col-md-3">
+            <section>
+                <h3>Messages</h3>
+                <div class="panel panel-warning">
+                    <div class="panel-heading">Your Messages</div>
+                    <div class="panel-body"><div id="playerMessages" class="playerMessages"></div></div>
+                </div>
+                <div class="panel panel-info">
+                    <div class="panel-heading">Game Messages</div>
+                    <div class="panel-body"><div id="gameMessages" class="gameMessages"></div></div>
+                </div>
+            </section>
+        </div>
     </div>
-
-    <div style="width:@(width)px;float:left;margin-right:20px;">
-        <div id="board" style="width:@(width)px;float:left;">
-            @{
-                foreach (TileViewModel t in Model.Tiles)
-                {
-                    <div class="tile tile@(t.State.ToString())" id="tile@(t.TileId)"><span>&nbsp;</span></div>
-                }
-            }
-            &nbsp;
-        </div>
-        <div id="toolbox" style="clear:left;width:@(width)px;">
-            <label id="lblBlackScore"></label>
-            <label id="lblWhiteScore"></label>
-            <div><p id="lblNextPlayer" class="form-control-static"></p></div>
-        </div>
-
-    </div>
-
-    <div style="width:250px;float:left;">
-        <div class="alert player">
-            <b>Your Messages</b>
-            <br />
-            <div id="playerMessages"></div>
-        </div>
-        <div class="alert game">
-            <b>Game Messages</b>
-            <br />
-            <div id="gameMessages"></div>
-        </div>
-    </div>
-
-    <div style="clear:both">
-        <form onsubmit="return false;">
-            <div class="form-inline alert messages">
-                <div id="userMessages"></div>
-                <input type="text" id="txtMessage" class="form-control">
-                <button id="btnSendMessage" class="btn btn-success">Send</button>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div style="clear:both" class="panel panel-success">
+            <div class="panel-heading">Chat Messages</div>
+            <div class="panel-body">
+                <div class="chatMessages">
+                    <form onsubmit="return false;">
+                        <div class="form-inline" id="chatMessages">
+                            <div id="userMessages"></div>
+                            <input type="text" id="txtMessage" class="form-control">
+                            <button id="btnSendMessage" class="btn btn-success">Send</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </form>
+        </div>
     </div>
-
 </div>
 
+  
 @section scripts {
     <script src="~/Scripts/jquery-ui-1.11.2.min.js"></script>
     <script src="~/Scripts/jquery.signalR-2.1.2.min.js"></script>
     <script src="~/signalr/hubs"></script>
-    <script src="~/Scripts/ReversiScript.js"></script>
+    <script src="~/Scripts/app/ReversiScript.js"></script>
 }
